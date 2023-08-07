@@ -1,4 +1,4 @@
-import db from "../database/database.connection";
+import db from "../database/database.connection.js";
 
 export const getUserBySession = async (token) => {
     const result = await db.query(`SELECT * FROM sessions WHERE token=$1`, token);

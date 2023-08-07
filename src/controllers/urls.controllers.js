@@ -51,7 +51,6 @@ export const deleteUrl = (req, res) => {
   const { token } = res.locals;
 
   try {
-    const deleted = ;
 
     res.send()
   } catch {
