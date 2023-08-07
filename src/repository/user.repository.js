@@ -7,7 +7,7 @@ export const checkUser = async (email) => {
   return res;
 };
 
-export const registerUser = async (name, email, password, res) => {
+export const registerUser = async (name, email, password) => {
   const hashedPw = bcrypt.hashSync(password, 10);
 
   const result = await db.query(
@@ -33,4 +33,16 @@ export const createSession = async (email, existingUser) => {
 export const deleteSession = async (token) => {
   const res = await db.query(`DELETE FROM sessions WHERE token=$1`, [token]);
   return res;
+};
+
+export const getUserInfo = async (userId) => {
+  const res = await db.query(`SELECT * FROM urls WHERE "userId" = $1`, [userId]);
+
+  return res;
+};
+
+export const getCounts = async (userId) => {
+  const result = await db.query(`SELECT SUM("visitCount") FROM urls WHERE "userId" = $1;`, [userId]);
+
+  return result;
 };

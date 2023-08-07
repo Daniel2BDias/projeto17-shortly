@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-import { checkUser, createSession, deleteSession, registerUser } from "../repository/user.repository.js";
+import { checkUser, createSession, deleteSession, getCounts, getUserInfo, registerUser } from "../repository/user.repository.js";
 
 export const signUpController = async (req, res) => {
   const {name, email, password} = req.body;
@@ -55,7 +55,36 @@ export const logOutController = async (req, res) => {
 };
 
 export const getUserMe = async (req, res) => {
-  const { token } = res.locals.token;
+  const { userId, userEmail } = res.locals;
+
+  try {
+    const userInfo = await getUserInfo(userId);
+    const getUser = await checkUser(userEmail);
+
+    console.log(getUser);
+
+    const linksArray = userInfo.rows.map((urls => {
+        delete urls.createdAt;
+        delete urls.userId;
+        return urls;
+    }));
+
+    const getVisitCount = await getCounts(userId);
+
+    const total = getVisitCount.rows[0].sum;
+
+    const result = {
+      id: userId,
+      name: getUser.rows[0].name,
+      visitCount: Number(total),
+      shortenedUrls: linksArray
+    }
+
+
+    res.status(200).send(result);
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
 };
 
 export const getRanking = async (req, res) => {
