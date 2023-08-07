@@ -40,7 +40,7 @@ export const redirectUrl = async (shortUrl) => {
     shortUrl,
   ]);
 
-  return result.rows[0].url;
+  return result?.rows[0]?.url;
 };
 
 export const addVisitCount = async (shortUrl) => {
