@@ -2,12 +2,16 @@ import bcrypt from "bcrypt";
 import { checkUser, createSession, deleteSession, registerUser } from "../repository/user.repository.js";
 
 export const signUpController = async (req, res) => {
+  const {name, email, password} = req.body;
   try {
-    registerUser(req.body);
+    const checkConflict = await checkUser(email);
+
+    if (checkConflict.rowCount > 0) return res.sendStatus(409);
+
+    await registerUser(name, email, password);
 
     res.sendStatus(201);
   } catch (error) {
-    if (error.code === "23505") return res.sendStatus(409);
     res.status(500).send(error.message);
   }
 };
@@ -16,9 +20,9 @@ export const loginController = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    const existingUser = checkUser(email);
+    const existingUser = await checkUser(email);
 
-    if (existingUser.rows.length === 0) return res.sendStatus(404);
+    if (existingUser.rowCount === 0) return res.sendStatus(404);
 
     const pWordValid = bcrypt.compareSync(
       password,
@@ -27,9 +31,9 @@ export const loginController = async (req, res) => {
     
     if (!pWordValid) return res.sendStatus(401);
 
-    createSession(email, existingUser);
+    const sessionData = await createSession(email, existingUser);
 
-    res.status(200).send({ token });
+    res.status(200).send({ token: sessionData });
   } catch (error) {
     res.status(500).send(error.message);
   }
