@@ -22,7 +22,7 @@ export const loginController = async (req, res) => {
   try {
     const existingUser = await checkUser(email);
 
-    if (existingUser.rowCount === 0) return res.sendStatus(404);
+    if (existingUser.rowCount === 0) return res.sendStatus(401);
 
     const pWordValid = bcrypt.compareSync(
       password,
