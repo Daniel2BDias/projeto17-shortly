@@ -32,7 +32,7 @@ export const getUrlById = async (req, res) => {
 
   try {
     const getUrl = await getUrl_Id(id);
-    if(getUrl.rows[0].length === 0) return res.sendStatus(404);
+    if(getUrl.rowCount === 0) return res.sendStatus(404);
 
     res.status(200).send(getUrl.rows[0]);
   } catch (error) {
