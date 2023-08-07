@@ -47,10 +47,10 @@ export const addVisitCount = async (shortUrl) => {
   const getCount = await db.query(`SELECT * FROM urls WHERE "shortUrl"=$1`, [
     shortUrl,
   ]);
-  const count = getCount.rows[0].visits;
+  const count = getCount.rows[0].visitCount;
 
-  const res = await db.query(`UPDATE urls SET visits=$1 WHERE "shortUrl"=$2`, [
-    count,
+  const res = await db.query(`UPDATE urls SET "visitCount"=$1 WHERE "shortUrl"=$2`, [
+    count+1,
     shortUrl,
   ]);
 

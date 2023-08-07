@@ -46,3 +46,18 @@ export const getCounts = async (userId) => {
 
   return result;
 };
+
+export const rankingListing = async () => {
+   const result = await db.query(`
+      SELECT users.id, users.name, 
+        COUNT(urls.id) as "linksCount",
+        COALESCE(SUM(urls."visitCount"), 0) as "visitCount"
+      FROM users
+      LEFT JOIN urls ON urls."userId" = users.id
+      GROUP BY users.id
+      ORDER BY "visitCount" DESC
+      LIMIT 10
+    `);
+
+    return result;
+};

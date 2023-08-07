@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-import { checkUser, createSession, deleteSession, getCounts, getUserInfo, registerUser } from "../repository/user.repository.js";
+import { checkUser, createSession, deleteSession, getCounts, getUserInfo, rankingListing, registerUser } from "../repository/user.repository.js";
 
 export const signUpController = async (req, res) => {
   const {name, email, password} = req.body;
@@ -89,8 +89,10 @@ export const getUserMe = async (req, res) => {
 
 export const getRanking = async (req, res) => {
   try {
+    const ranking = await rankingListing();
 
-  } catch (error){
+    res.send(ranking.rows);
+  } catch (error) {
     res.status(500).send(error.message);
-  };
+  }
 };
