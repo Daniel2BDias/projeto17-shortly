@@ -45,6 +45,7 @@ export const openUrl = async (req, res) => {
 
   try {
     const url = await redirectUrl(shortUrl);
+    console.log(url);
     if(!url) return res.sendStatus(404);
     const addVisit = await addVisitCount(shortUrl);
     res.redirect(url);

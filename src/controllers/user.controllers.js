@@ -4,6 +4,7 @@ import { checkUser, createSession, deleteSession, registerUser } from "../reposi
 export const signUpController = async (req, res) => {
   const {name, email, password} = req.body;
   try {
+    if(typeof password !== "string") return res.sendStatus(422);
     const checkConflict = await checkUser(email);
 
     if (checkConflict.rowCount > 0) return res.sendStatus(409);
