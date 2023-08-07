@@ -7,16 +7,20 @@ export default async function validateToken(req, res, next) {
 
   if (!token) return res.sendStatus(401);
 
-  const validateToken = await db.query(
+  try{
+  const getSession = await db.query(
     `SELECT * FROM sessions WHERE token = $1`,
     [token]
   );
 
-  if (validateToken.rowCount === 0) return res.sendStatus(401);
+  if (getSession.rowCount === 0) return res.sendStatus(401);
 
   res.locals.token = token;
-  res.locals.userId = validateToken.rows[0].userId;
-  res.locals.userEmail = validateToken.rows[0].userEmail;
+  res.locals.userId = getSession.rows[0].userId;
+  res.locals.userEmail = getSession.rows[0].userEmail;
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
 
   next();
 }
