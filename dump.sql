@@ -19,6 +19,6 @@ CREATE TABLE urls (
      "userId" INTEGER REFERENCES users(id),
       url TEXT NOT NULL,
       "shortUrl" TEXT UNIQUE NOT NULL,
-      visits INTEGER DEFAULT 0,
+      "visitCount" INTEGER DEFAULT 0,
       "createdAt" TIMESTAMP DEFAULT NOW()
 );
